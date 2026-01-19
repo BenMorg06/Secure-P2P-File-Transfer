@@ -1,0 +1,4 @@
+- [ ] AEAD used for all encrypted data
+- [ ] Discovery treated as untrusted
+- [ ] Ephemeral keys per session
+- [ ] Metadata encrypted
