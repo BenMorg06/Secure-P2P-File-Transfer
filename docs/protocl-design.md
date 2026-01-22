@@ -24,12 +24,12 @@ Replay attacks are mitigated through sequence numbers
 		- Session Keys are established for encryption
 - Receiver
 	- Approves senders request to send data
-Transfer
+**Transfer**
 - File metadata and contents are encrypted end-to-end using session keys
 - File is transferred in chunks over TCP
 - Each chunk is encrypted and authenticated using AEAD
 - Receiver verifies integrity before writing data to disk
-Close
+**Close**
 - Sender and receiver verify transaction is successful 
 - Session keys and key material securely deleted
 - TCP connection closed

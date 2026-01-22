@@ -1,5 +1,5 @@
 
-# Threat Model
+# [[threat-model|Threat Model]]
 
 ## Who are the attackers?
 
@@ -36,7 +36,7 @@ Command-line interface (CLI)
 - Provides reliable delivery
 - All data is encrypted before transmission
 
-# Encryption
+# [[protocl-design#What is Encrypted?|Encryption]]
 
 ## Key Exchange
 

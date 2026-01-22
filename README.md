@@ -22,13 +22,29 @@ This project is under active development
 - End-to-End encryption
 - Explicit and documented security assumptions
 
+## System Architecture
+
+```
+Peer A <-- secure channel --> Peer B
+  |                             |
+File Writer                 File reader
+Encryption                  Decryption
+```
+
+### Components
+
+- Peer Discovery - finds peers on local network
+- Handshake & Key Exchange - secure connection
+- Secure Channel - end-to-end encryption
+- File Transfer - handles chunking, retransmission, integrity
+
 ## Documentation
 
 - 'docs/thread-model.md'
 - 'docs/protocl-design.md'
 - 'docs/attack-simulation.md'
-- 'docs/security-audit.md'
+- 'docs/crypto.md'
 
-## Implemtation
+## Implementation
 
 - Language: Python 3
