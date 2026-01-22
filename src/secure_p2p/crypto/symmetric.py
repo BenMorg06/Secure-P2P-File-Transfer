@@ -1,7 +1,7 @@
 import os
 from cryptography.hazmat.primitives.ciphers.aead import AESGCM
 
-__todo__ = "Condiser custom error exceptions for encryption/decryption failures."
+__todo__ = "Consider custom error exceptions for encryption/decryption failures."
 
 class EncryptedPayload:
     """

@@ -19,7 +19,7 @@ Replay attacks are mitigated through sequence numbers
 	- Selects device from list 
 	- Initiates connection to receiver
 	- Once approved
-		- Sender and receive perform ECDH key exchange
+		- Sender and receiver perform ECDH key exchange
 		- Shared session secret is derived using HKDF
 		- Session Keys are established for encryption
 - Receiver
