@@ -1,6 +1,8 @@
 import os
 from cryptography.hazmat.primitives.ciphers.aead import AESGCM
 
+__todo__ = "Condiser custom error exceptions for encryption/decryption failures."
+
 class EncryptedPayload:
     """
     Container for AEAD-encrypted data.
@@ -50,6 +52,7 @@ def decrypt(payload: EncryptedPayload, key: bytes, aad: bytes=None) -> bytes:
     Raises:
         ValueError: If the decryption fails.
     """
+    __todo__ = "Handle key length validation if needed."
     aesgcm = AESGCM(key)
     try:
         plaintext = aesgcm.decrypt(payload.nonce, payload.ciphertext, aad)
