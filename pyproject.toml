@@ -1,0 +1,16 @@
+[build-system]
+requires = ["hatchling >=1.26]
+build-backend = "hatchling.build
+
+[project]
+name = "secure_p2p_file_transfer_BenMorg06"
+version = "0.0.1"
+authors = [
+    { name="Ben Morgan", email="b_morgan04@outlook.com" },
+]
+description = "A package for peer-to-peer single file transfer"
+readme = "README.md"
+requires-python >= "3.9"
+
+[project.urls]
+Homepage = "https://github.com/BenMorg06/Secure-P2P-File-Transfer"
