@@ -8,7 +8,7 @@ symmetric.py
 
 ### Testing
 
-
+Test each parameter of functions and ensure correct errors and successes
 
 ## Phase 2 - Secure Channel
 ## Phase 3 - Networking & Protocol
