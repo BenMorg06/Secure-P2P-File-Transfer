@@ -14,7 +14,9 @@ class TestEncryption:
     key = os.urandom(32)
     long_key = os.urandom(64)
     short_key = os.urandom(16)
+    bad_key = "1111"
     aad = os.urandom(12)
+    bad_aad = "info"
 
     def test_lower(self):
         ciphertext = symmetric.encrypt(self.lower_plaintext, self.key)
@@ -36,11 +38,11 @@ class TestEncryption:
         output_plaintext = symmetric.decrypt(ciphertext, self.key)
         assert output_plaintext == self.expected_plaintext
 
-    # TODO test incorrect plaintext and ciphertext format
     def test_non_byte_plaintext(self):
-        with pytest.raises(ValueError):
+        with pytest.raises(TypeError):
             ciphertext = symmetric.encrypt(self.bad_plaintext, self.key)
 
+    # TODO Understand why this test passes
     def test_non_payload_ciphertext(self):
         with pytest.raises(ValueError):
             ciphertext = b"Hello World"
@@ -51,9 +53,9 @@ class TestEncryption:
         output_plaintext = symmetric.decrypt(ciphertext, self.key, self.aad)
         assert output_plaintext == self.expected_plaintext
 
-    # TODO Test incorrect aad format - Needs fix in symmetric
     def test_with_invalid_aad(self):
-        pass
+        with pytest.raises(TypeError):
+            symmetric.encrypt(self.expected_plaintext, self.key, self.bad_aad)
 
     def test_short_key_encrypt(self):
         with pytest.raises(ValueError):
@@ -72,4 +74,10 @@ class TestEncryption:
             symmetric.decrypt(self.expected_plaintext, self.long_key)
 
     # TODO Test incorrect key format - needs fix in symmetric
-
+    def test_bad_key_encrypt(self):
+        with pytest.raises(TypeError):
+            symmetric.encrypt(self.expected_plaintext, self.bad_key)
+    
+    def test_bad_key_decrypt(self):
+        with pytest.raises(TypeError):
+            symmetric.decrypt(self.expected_plaintext, self.bad_key)
