@@ -1,13 +1,16 @@
 import os, sys, pytest
 from pathlib import Path
+
 sys.path.append(str(Path.home() / "Documents/Secure-P2P-File-Transfer/src/crypto"))
 import symmetric
 
+
 class TestEncryption:
     expected_plaintext = b"Hello World! 123"
-    lower_plaintext = b'hello'
-    upper_plaintext = b'HELLO'
+    lower_plaintext = b"hello"
+    upper_plaintext = b"HELLO"
     mix_plaintext = b"Hello"
+    bad_plaintext = "Hello"  # Non-Byte format
     key = os.urandom(32)
     long_key = os.urandom(64)
     short_key = os.urandom(16)
@@ -35,10 +38,13 @@ class TestEncryption:
 
     # TODO test incorrect plaintext and ciphertext format
     def test_non_byte_plaintext(self):
-        pass
+        with pytest.raises(ValueError):
+            ciphertext = symmetric.encrypt(self.bad_plaintext, self.key)
 
     def test_non_payload_ciphertext(self):
-        pass
+        with pytest.raises(ValueError):
+            ciphertext = b"Hello World"
+            output_plaintext = symmetric.decrypt(ciphertext, self.key)
 
     def test_expected_with_aad(self):
         ciphertext = symmetric.encrypt(self.expected_plaintext, self.key, self.aad)
@@ -66,3 +72,4 @@ class TestEncryption:
             symmetric.decrypt(self.expected_plaintext, self.long_key)
 
     # TODO Test incorrect key format - needs fix in symmetric
+
