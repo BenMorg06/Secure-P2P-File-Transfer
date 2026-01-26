@@ -4,6 +4,7 @@ from pathlib import Path
 sys.path.append(str(Path.home() / "Documents/Secure-P2P-File-Transfer/src/crypto"))
 import symmetric
 
+# TODO Change urandom for test reproducibility
 
 class TestEncryption:
     expected_plaintext = b"Hello World! 123"
@@ -17,6 +18,8 @@ class TestEncryption:
     bad_key = "1111"
     aad = os.urandom(12)
     bad_aad = "info"
+    good_ciphertext = symmetric.encrypt(expected_plaintext, key)
+
 
     def test_lower(self):
         ciphertext = symmetric.encrypt(self.lower_plaintext, self.key)
@@ -44,7 +47,7 @@ class TestEncryption:
 
     # TODO Understand why this test passes
     def test_non_payload_ciphertext(self):
-        with pytest.raises(ValueError):
+        with pytest.raises(TypeError):
             ciphertext = b"Hello World"
             output_plaintext = symmetric.decrypt(ciphertext, self.key)
 
@@ -63,7 +66,7 @@ class TestEncryption:
 
     def test_short_key_decrypt(self):
         with pytest.raises(ValueError):
-            symmetric.decrypt(self.expected_plaintext, self.short_key)
+            symmetric.decrypt(self.good_ciphertext, self.short_key)
 
     def test_long_key_encrypt(self):
         with pytest.raises(ValueError):
@@ -71,13 +74,24 @@ class TestEncryption:
 
     def test_long_key_decrypt(self):
         with pytest.raises(ValueError):
-            symmetric.decrypt(self.expected_plaintext, self.long_key)
+            symmetric.decrypt(self.good_ciphertext, self.long_key)
 
-    # TODO Test incorrect key format - needs fix in symmetric
     def test_bad_key_encrypt(self):
         with pytest.raises(TypeError):
             symmetric.encrypt(self.expected_plaintext, self.bad_key)
     
     def test_bad_key_decrypt(self):
         with pytest.raises(TypeError):
-            symmetric.decrypt(self.expected_plaintext, self.bad_key)
+            symmetric.decrypt(self.good_ciphertext, self.bad_key)
+
+    # TODO Tampered ciphertext
+
+    # TODO Wrong Key
+
+    # TODO Wrong AAD
+
+    # TODO Nonce related tests
+
+    # TODO Check AAD in decrypt
+
+    # TODO Test Large and Empty plaintexts and ciphertexts

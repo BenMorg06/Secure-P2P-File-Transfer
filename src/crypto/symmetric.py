@@ -2,6 +2,7 @@ import os
 from cryptography.hazmat.primitives.ciphers.aead import AESGCM
 
 # TODO Consider custom error exceptions for encryption/decryption failures
+# TODO Replace type checks with isinstance
 
 class EncryptedPayload:
     """
@@ -58,7 +59,8 @@ def decrypt(payload: EncryptedPayload, key: bytes, aad: bytes=None) -> bytes:
     Raises:
         ValueError: If the decryption fails.
     """
-    # TODO Handle key length validation if needed.
+    if not isinstance(payload, EncryptedPayload):
+        raise TypeError("Payload must be EncryptedPayload Object")
     if type(key) != bytes:
         raise TypeError("Key must be bytes")
     if len(key) != 32:
