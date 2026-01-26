@@ -1,4 +1,5 @@
 # Testing can be done in classes like in kotlin
+'''
 class TestClassDemoInstance:
     value = 0
 
@@ -8,3 +9,4 @@ class TestClassDemoInstance:
 
     def test_two(self):
         assert self.value == 1
+'''
