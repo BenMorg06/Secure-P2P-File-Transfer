@@ -5,6 +5,7 @@ sys.path.append(str(Path.home() / "Documents/Secure-P2P-File-Transfer/src/crypto
 import symmetric
 
 # TODO Change urandom for test reproducibility
+# TODO Parametrize tests
 
 class TestEncryption:
     expected_plaintext = b"Hello World! 123"
@@ -20,26 +21,16 @@ class TestEncryption:
     bad_aad = "info"
     good_ciphertext = symmetric.encrypt(expected_plaintext, key)
 
-
-    def test_lower(self):
-        ciphertext = symmetric.encrypt(self.lower_plaintext, self.key)
-        output_plaintext = symmetric.decrypt(ciphertext, self.key)
-        assert output_plaintext == self.lower_plaintext
-
-    def test_upper(self):
-        ciphertext = symmetric.encrypt(self.upper_plaintext, self.key)
-        output_plaintext = symmetric.decrypt(ciphertext, self.key)
-        assert output_plaintext == self.upper_plaintext
-
-    def test_mix(self):
-        ciphertext = symmetric.encrypt(self.mix_plaintext, self.key)
-        output_plaintext = symmetric.decrypt(ciphertext, self.key)
-        assert output_plaintext == self.mix_plaintext
-
-    def test_expected(self):
-        ciphertext = symmetric.encrypt(self.expected_plaintext, self.key)
-        output_plaintext = symmetric.decrypt(ciphertext, self.key)
-        assert output_plaintext == self.expected_plaintext
+    @pytest.mark.parametrize("plaintext", 
+    [
+        lower_plaintext,
+        upper_plaintext,
+        mix_plaintext,
+        expected_plaintext
+    ])
+    def test_encrypt(self, plaintext):
+        ciphertext = symmetric.encrypt(plaintext, self.key)
+        assert symmetric.decrypt(ciphertext, self.key) == plaintext
 
     def test_non_byte_plaintext(self):
         with pytest.raises(TypeError):
