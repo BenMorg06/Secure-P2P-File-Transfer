@@ -11,6 +11,7 @@ class TestEncryption:
     key = os.urandom(32)
     long_key = os.urandom(64)
     short_key = os.urandom(16)
+    aad = os.urandom(12)
 
     def test_lower(self):
         ciphertext = symmetric.encrypt(self.lower_plaintext, self.key)
@@ -32,7 +33,36 @@ class TestEncryption:
         output_plaintext = symmetric.decrypt(ciphertext, self.key)
         assert output_plaintext == self.expected_plaintext
 
+    # TODO test incorrect plaintext and ciphertext format
+    def test_non_byte_plaintext(self):
+        pass
+
+    def test_non_payload_ciphertext(self):
+        pass
+
+    def test_expected_with_aad(self):
+        ciphertext = symmetric.encrypt(self.expected_plaintext, self.key, self.aad)
+        output_plaintext = symmetric.decrypt(ciphertext, self.key, self.aad)
+        assert output_plaintext == self.expected_plaintext
+
+    # TODO Test incorrect aad format - Needs fix in symmetric
+    def test_with_invalid_aad(self):
+        pass
+
     def test_short_key_encrypt(self):
         with pytest.raises(ValueError):
             symmetric.encrypt(self.expected_plaintext, self.short_key)
-        
+
+    def test_short_key_decrypt(self):
+        with pytest.raises(ValueError):
+            symmetric.decrypt(self.expected_plaintext, self.short_key)
+
+    def test_long_key_encrypt(self):
+        with pytest.raises(ValueError):
+            symmetric.encrypt(self.expected_plaintext, self.long_key)
+
+    def test_long_key_decrypt(self):
+        with pytest.raises(ValueError):
+            symmetric.decrypt(self.expected_plaintext, self.long_key)
+
+    # TODO Test incorrect key format - needs fix in symmetric
