@@ -1,11 +1,22 @@
 import os, sys, pytest
 from pathlib import Path
 
-sys.path.append(str(Path.home() / "Documents/Secure-P2P-File-Transfer/src/crypto"))
+possible_paths = [
+    Path.home() / "Documents/Secure-P2P-File-Transfer/src/crypto",
+    Path.home()
+    / "Documents/Obsidian-Vaults/cortado/Secure-P2P-File-Transfer/src/crypto",
+]
+
+for path in possible_paths:
+    if path.exists():
+        sys.path.append(str(path))
+        break
+
 import symmetric
 
 # TODO Change urandom for test reproducibility
 # TODO Parametrize tests
+
 
 class TestEncryption:
     expected_plaintext = b"Hello World! 123"
@@ -21,13 +32,10 @@ class TestEncryption:
     bad_aad = "info"
     good_ciphertext = symmetric.encrypt(expected_plaintext, key)
 
-    @pytest.mark.parametrize("plaintext", 
-    [
-        lower_plaintext,
-        upper_plaintext,
-        mix_plaintext,
-        expected_plaintext
-    ])
+    @pytest.mark.parametrize(
+        "plaintext",
+        [lower_plaintext, upper_plaintext, mix_plaintext, expected_plaintext],
+    )
     def test_encrypt(self, plaintext):
         ciphertext = symmetric.encrypt(plaintext, self.key)
         assert symmetric.decrypt(ciphertext, self.key) == plaintext
@@ -70,7 +78,7 @@ class TestEncryption:
     def test_bad_key_encrypt(self):
         with pytest.raises(TypeError):
             symmetric.encrypt(self.expected_plaintext, self.bad_key)
-    
+
     def test_bad_key_decrypt(self):
         with pytest.raises(TypeError):
             symmetric.decrypt(self.good_ciphertext, self.bad_key)
@@ -86,3 +94,4 @@ class TestEncryption:
     # TODO Check AAD in decrypt
 
     # TODO Test Large and Empty plaintexts and ciphertexts
+
