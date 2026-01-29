@@ -132,12 +132,11 @@ class TestEncryption:
         with pytest.raises(ValueError):
             symmetric.decrypt(ciphertext, self.key)
 
-    # TODO AAD empty
     def test_empty_aad(self):
         ciphertext = symmetric.encrypt(self.expected_plaintext, self.key, b'')
         plaintext = symmetric.decrypt(ciphertext, self.key, b'')
         assert plaintext == self.expected_plaintext
-    # TODO AAD Used for encrypt but missing fo decrypt and vice versa
+
     def test_missing_aad_on_decrypt(self):
         ciphertext = symmetric.encrypt(self.expected_plaintext, self.key, self.aad) # AAD
         with pytest.raises(ValueError):
@@ -171,3 +170,8 @@ class TestEncryption:
         with pytest.raises(TypeError):
             symmetric.decrypt(None, self.key)
     # TODO Authenticaion tag length
+    def test_ciphertext_length(self):
+        plaintext = b"test"
+        ciphertext = symmetric.encrypt(plaintext, self.key)
+        # AES-GCM adds 16-byte authentication tag
+        assert len(ciphertext.ciphertext) == len(plaintext) + 16
