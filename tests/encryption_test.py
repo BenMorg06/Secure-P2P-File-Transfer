@@ -133,7 +133,21 @@ class TestEncryption:
             symmetric.decrypt(ciphertext, self.key)
 
     # TODO AAD empty
+    def test_empty_aad(self):
+        ciphertext = symmetric.encrypt(self.expected_plaintext, self.key, b'')
+        plaintext = symmetric.decrypt(ciphertext, self.key, b'')
+        assert plaintext == self.expected_plaintext
     # TODO AAD Used for encrypt but missing fo decrypt and vice versa
+    def test_missing_aad_on_decrypt(self):
+        ciphertext = symmetric.encrypt(self.expected_plaintext, self.key, self.aad) # AAD
+        with pytest.raises(ValueError):
+            symmetric.decrypt(ciphertext, self.key)  # No AAD 
+
+    def test_missing_aad_on_decrypt(self):
+        ciphertext = symmetric.encrypt(self.expected_plaintext, self.key) # No AAD
+        with pytest.raises(ValueError):
+            symmetric.decrypt(ciphertext, self.key, self.aad)  # AAD 
+
 
     def test_payload_attributes(self):
         assert hasattr(self.good_ciphertext, 'nonce')
@@ -152,7 +166,7 @@ class TestEncryption:
     def test_none_plaintext(self):
         with pytest.raises(TypeError):
             symmetric.encrypt(None, self.key)
-            
+
     def test_none_ciphertext(self):
         with pytest.raises(TypeError):
             symmetric.decrypt(None, self.key)
