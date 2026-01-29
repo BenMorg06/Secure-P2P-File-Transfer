@@ -1,5 +1,7 @@
 # Algorithms Used
 
+[[Project-Plan]]
+[[protocl-design]]
 
 | Purpose      | Algorithm                |
 | ------------ | ------------------------ |
