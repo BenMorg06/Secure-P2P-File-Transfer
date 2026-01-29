@@ -31,13 +31,13 @@ def encrypt(data: bytes, key: bytes, aad: bytes=None) -> EncryptedPayload:
     Raises:
         ValueError: If the key length is not 32 bytes.
     """
-    if type(key) != bytes:
+    if not isinstance(key, bytes):
         raise TypeError("Key must be bytes")
     if len(key) != 32:
         raise ValueError("Key must be 32 bytes in length.")
-    if type(data) != bytes: 
+    if not isinstance(data, bytes): 
         raise TypeError("Plaintext must be bytes")
-    if aad and type(aad) != bytes:
+    if aad and not isinstance(aad, bytes):
         raise TypeError("AAD must be bytes")
     aesgcm = AESGCM(key)
     nonce = os.urandom(12) # Fresh nonce for each encryption
@@ -61,7 +61,7 @@ def decrypt(payload: EncryptedPayload, key: bytes, aad: bytes=None) -> bytes:
     """
     if not isinstance(payload, EncryptedPayload):
         raise TypeError("Payload must be EncryptedPayload Object")
-    if type(key) != bytes:
+    if not isinstance(key, bytes):
         raise TypeError("Key must be bytes")
     if len(key) != 32:
         raise ValueError("Key must be 32 bytes in length")

@@ -15,8 +15,6 @@ for path in possible_paths:
 import symmetric
 
 # TODO Change urandom for test reproducibility
-# TODO Parametrize tests
-
 
 class TestEncryption:
     expected_plaintext = b"Hello World! 123"
@@ -25,7 +23,7 @@ class TestEncryption:
     mix_plaintext = b"Hello"
     bad_plaintext = "Hello"  # Non-Byte format
     empty_plaintext = b''
-    long_plaintext = os.urandom(256)
+    long_plaintext = os.urandom(10*1024*1024)
     key = os.urandom(32)
     different_key = os.urandom(32)
     long_key = os.urandom(64)
@@ -87,7 +85,6 @@ class TestEncryption:
         with pytest.raises(ValueError):
             symmetric.decrypt(self.good_ciphertext, key)
 
-    # TODO is it worth combining with parametrize and if statement?
     def test_invalid_key_encrypt(self):
         with pytest.raises(TypeError):
             symmetric.encrypt(self.expected_plaintext, self.bad_key)
@@ -142,7 +139,7 @@ class TestEncryption:
         with pytest.raises(ValueError):
             symmetric.decrypt(ciphertext, self.key)  # No AAD 
 
-    def test_missing_aad_on_decrypt(self):
+    def test_missing_aad_on_encrypt(self):
         ciphertext = symmetric.encrypt(self.expected_plaintext, self.key) # No AAD
         with pytest.raises(ValueError):
             symmetric.decrypt(ciphertext, self.key, self.aad)  # AAD 
@@ -171,7 +168,5 @@ class TestEncryption:
             symmetric.decrypt(None, self.key)
     # TODO Authenticaion tag length
     def test_ciphertext_length(self):
-        plaintext = b"test"
-        ciphertext = symmetric.encrypt(plaintext, self.key)
         # AES-GCM adds 16-byte authentication tag
-        assert len(ciphertext.ciphertext) == len(plaintext) + 16
+        assert len(self.good_ciphertext.ciphertext) == len(self.expected_plaintext) + 16
