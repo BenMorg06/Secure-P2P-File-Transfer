@@ -1,11 +1,22 @@
 import os, sys, pytest
 from pathlib import Path
 
-sys.path.append(str(Path.home() / "Documents/Secure-P2P-File-Transfer/src/crypto"))
+possible_paths = [
+    Path.home() / "Documents/Secure-P2P-File-Transfer/src/crypto",
+    Path.home()
+    / "Documents/Obsidian-Vaults/cortado/Secure-P2P-File-Transfer/src/crypto",
+]
+
+for path in possible_paths:
+    if path.exists():
+        sys.path.append(str(path))
+        break
+
 import symmetric
 
 # TODO Change urandom for test reproducibility
 # TODO Parametrize tests
+
 
 class TestEncryption:
     expected_plaintext = b"Hello World! 123"
@@ -95,3 +106,4 @@ class TestEncryption:
             symmetric.decrypt(self.good_ciphertext, self.key, self.bad_aad)
 
     # TODO Test Large and Empty plaintexts and ciphertexts
+
