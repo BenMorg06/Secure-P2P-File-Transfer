@@ -28,7 +28,8 @@ class TestEncryption:
         lower_plaintext,
         upper_plaintext,
         mix_plaintext,
-        expected_plaintext
+        expected_plaintext,
+        # long plaintext
     ])
     def test_encrypt(self, plaintext):
         ciphertext = symmetric.encrypt(plaintext, self.key)
@@ -53,37 +54,35 @@ class TestEncryption:
         with pytest.raises(TypeError):
             symmetric.encrypt(self.expected_plaintext, self.key, self.bad_aad)
 
-    # TODO Parametrize
-    def test_short_key_encrypt(self):
+    @pytest.mark.parametrize("key", 
+    [
+        short_key,
+        long_key
+    ])
+    def test_bad_key_encrypt(self, key):
         with pytest.raises(ValueError):
-            symmetric.encrypt(self.expected_plaintext, self.short_key)
+            symmetric.encrypt(self.expected_plaintext, key)
 
-    def test_long_key_encrypt(self):
-        with pytest.raises(ValueError):
-            symmetric.encrypt(self.expected_plaintext, self.long_key)
-
-    # TODO Parametrize
-    def test_short_key_decrypt(self):
+    @pytest.mark.parametrize("key", 
+    [
+        short_key,
+        long_key,
+        different_key
+    ])
+    def test_bad_key_decrypt(self, key):
         with pytest.raises(ValueError):
             symmetric.decrypt(self.good_ciphertext, self.short_key)
 
-    def test_long_key_decrypt(self):
-        with pytest.raises(ValueError):
-            symmetric.decrypt(self.good_ciphertext, self.long_key)
-
-    def test_bad_key_encrypt(self):
+    # TODO is it worth combining with parametrize and if statement?
+    def test_invalid_key_encrypt(self):
         with pytest.raises(TypeError):
             symmetric.encrypt(self.expected_plaintext, self.bad_key)
     
-    def test_bad_key_decrypt(self):
+    def test_invalid_key_decrypt(self):
         with pytest.raises(TypeError):
             symmetric.decrypt(self.good_ciphertext, self.bad_key)
 
     # TODO Tampered ciphertext
-
-    def test_wrong_key_decrypt(self):
-        with pytest.raises(ValueError):
-            symmetric.decrypt(self.good_ciphertext, self.different_key)
 
     def test_wrong_aad_decrypt(self):
         with pytest.raises(ValueError):
@@ -91,7 +90,7 @@ class TestEncryption:
 
     # TODO Nonce related tests
 
-    def test_wrong_aad_decrypt(self):
+    def test_invalid_aad_decrypt(self):
         with pytest.raises(ValueError):
             symmetric.decrypt(self.good_ciphertext, self.key, self.bad_aad)
 
