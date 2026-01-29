@@ -134,15 +134,22 @@ class TestEncryption:
 
     # TODO AAD empty
     # TODO AAD Used for encrypt but missing fo decrypt and vice versa
-    # TODO Encryted payload structure
+
     def test_payload_attributes(self):
         assert hasattr(self.good_ciphertext, 'nonce')
         assert hasattr(self.good_ciphertext, 'ciphertext')
-        assert isinstance(good_ciphertext.nonce, 'bytes')
-        assert isinstance(good_ciphertext.ciphertext, 'bytes')
+        assert isinstance(self.good_ciphertext.nonce, bytes)
+        assert isinstance(self.good_ciphertext.ciphertext, bytes)
 
     def test_invalid_payload_type(self):
         with pytest.raises(TypeError):
             symmetric.decrypt("Not Payload", self.key)
     # TODO None Values En/Decrypt
+    def test_none_key_encrypt(self):
+        with pytest.raises(TypeError):
+            symmetric.encrypt(self.expected_plaintext, None)
+
+    def test_none_plaintext(self):
+        with pytest.raises(TypeError):
+            symmetric.encrypt(None, self.key)
     # TODO Authenticaion tag length
