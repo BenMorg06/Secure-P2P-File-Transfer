@@ -24,6 +24,8 @@ class TestEncryption:
     upper_plaintext = b"HELLO"
     mix_plaintext = b"Hello"
     bad_plaintext = "Hello"  # Non-Byte format
+    empty_plaintext = b''
+    long_plaintext = os.urandom(256)
     key = os.urandom(32)
     different_key = os.urandom(32)
     long_key = os.urandom(64)
@@ -40,7 +42,8 @@ class TestEncryption:
         upper_plaintext,
         mix_plaintext,
         expected_plaintext,
-        # long plaintext
+        empty_plaintext, # currently allowed and works???
+        long_plaintext
     ])
     def test_encrypt(self, plaintext):
         ciphertext = symmetric.encrypt(plaintext, self.key)
@@ -93,17 +96,13 @@ class TestEncryption:
         with pytest.raises(TypeError):
             symmetric.decrypt(self.good_ciphertext, self.bad_key)
 
-    # TODO Tampered ciphertext
-
     def test_wrong_aad_decrypt(self):
         with pytest.raises(ValueError):
             symmetric.decrypt(self.good_ciphertext, self.key, self.different_aad)
-
-    # TODO Nonce related tests
 
     def test_invalid_aad_decrypt(self):
         with pytest.raises(ValueError):
             symmetric.decrypt(self.good_ciphertext, self.key, self.bad_aad)
 
-    # TODO Test Large and Empty plaintexts and ciphertexts
-
+    # TODO Nonce related tests
+    # TODO Tampered ciphertext
