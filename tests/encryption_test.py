@@ -144,7 +144,7 @@ class TestEncryption:
     def test_invalid_payload_type(self):
         with pytest.raises(TypeError):
             symmetric.decrypt("Not Payload", self.key)
-    # TODO None Values En/Decrypt
+
     def test_none_key_encrypt(self):
         with pytest.raises(TypeError):
             symmetric.encrypt(self.expected_plaintext, None)
@@ -152,4 +152,8 @@ class TestEncryption:
     def test_none_plaintext(self):
         with pytest.raises(TypeError):
             symmetric.encrypt(None, self.key)
+            
+    def test_none_ciphertext(self):
+        with pytest.raises(TypeError):
+            symmetric.decrypt(None, self.key)
     # TODO Authenticaion tag length
