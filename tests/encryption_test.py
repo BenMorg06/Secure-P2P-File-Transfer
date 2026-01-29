@@ -14,10 +14,12 @@ class TestEncryption:
     mix_plaintext = b"Hello"
     bad_plaintext = "Hello"  # Non-Byte format
     key = os.urandom(32)
+    different_key = os.urandom(32)
     long_key = os.urandom(64)
     short_key = os.urandom(16)
     bad_key = "1111"
     aad = os.urandom(12)
+    different_aad = os.urandom(12)
     bad_aad = "info"
     good_ciphertext = symmetric.encrypt(expected_plaintext, key)
 
@@ -51,17 +53,19 @@ class TestEncryption:
         with pytest.raises(TypeError):
             symmetric.encrypt(self.expected_plaintext, self.key, self.bad_aad)
 
+    # TODO Parametrize
     def test_short_key_encrypt(self):
         with pytest.raises(ValueError):
             symmetric.encrypt(self.expected_plaintext, self.short_key)
 
-    def test_short_key_decrypt(self):
-        with pytest.raises(ValueError):
-            symmetric.decrypt(self.good_ciphertext, self.short_key)
-
     def test_long_key_encrypt(self):
         with pytest.raises(ValueError):
             symmetric.encrypt(self.expected_plaintext, self.long_key)
+
+    # TODO Parametrize
+    def test_short_key_decrypt(self):
+        with pytest.raises(ValueError):
+            symmetric.decrypt(self.good_ciphertext, self.short_key)
 
     def test_long_key_decrypt(self):
         with pytest.raises(ValueError):
@@ -77,12 +81,18 @@ class TestEncryption:
 
     # TODO Tampered ciphertext
 
-    # TODO Wrong Key
+    def test_wrong_key_decrypt(self):
+        with pytest.raises(ValueError):
+            symmetric.decrypt(self.good_ciphertext, self.different_key)
 
-    # TODO Wrong AAD
+    def test_wrong_aad_decrypt(self):
+        with pytest.raises(ValueError):
+            symmetric.decrypt(self.good_ciphertext, self.key, self.different_aad)
 
     # TODO Nonce related tests
 
-    # TODO Check AAD in decrypt
+    def test_wrong_aad_decrypt(self):
+        with pytest.raises(ValueError):
+            symmetric.decrypt(self.good_ciphertext, self.key, self.bad_aad)
 
     # TODO Test Large and Empty plaintexts and ciphertexts
