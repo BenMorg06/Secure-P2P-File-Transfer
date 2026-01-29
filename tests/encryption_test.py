@@ -85,7 +85,7 @@ class TestEncryption:
     ])
     def test_bad_key_decrypt(self, key):
         with pytest.raises(ValueError):
-            symmetric.decrypt(self.good_ciphertext, self.short_key)
+            symmetric.decrypt(self.good_ciphertext, key)
 
     # TODO is it worth combining with parametrize and if statement?
     def test_invalid_key_encrypt(self):
@@ -104,5 +104,27 @@ class TestEncryption:
         with pytest.raises(ValueError):
             symmetric.decrypt(self.good_ciphertext, self.key, self.bad_aad)
 
-    # TODO Nonce related tests
+    # TODO Nonce uniqueness
+    def test_nonce_uniqueness(self):
+        ciphertexts = [symmetric.encrypt(self.expected_plaintext, self.key) for i in range(100)]
+        nonces = [ct.nonce for ct in ciphertexts]
+        assert len(nonces) == len(set(nonces))
+    # TODO Nonce Length Validation
+    def test_nonce_length(self):
+        ciphertext = symmetric.encrypt(self.expected_plaintext, self.key)
+        assert len(ciphertext.nonce) == 12
+    # TODO Tampered Nonce
+    def test_tampered_nonce(self):
+        ciphertext = symmetric.encrypt(self.expected_plaintext, self.key)
+        tampered_nonce = bytearray(ciphertext.nonce)
+        tampered_nonce[0] ^= 0x01
+        ciphertext.nonce = bytes(tampered_nonce)
+
+        with pytest.raises(ValueError):
+            symmetric.decrypt(ciphertext, self.key)
     # TODO Tampered ciphertext
+    # TODO AAD empty
+    # TODO AAD Used for encrypt but missing fo decrypt and vice versa
+    # TODO Encryted payloa structure
+    # TODO None Values En/Decrypt
+    # TODO Authenticaion tag length
