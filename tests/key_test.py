@@ -58,6 +58,35 @@ class TestKeyExchange:
         key2 = key_exchange.derive_symmetric_key(shared_secret, info2)
         assert key1 != key2
 
-    # TODO End-to-End computation and derivation test
-    # TODO Invalid input tests
-    
+    @pytest.mark.parametrize('client_key, receiver_key',
+        [
+            (x25519.X25519PrivateKey, "Public Key"),
+            ("Private Key", x25519.X25519PublicKey),
+            (None, None)
+        ]
+            
+    )
+    def test_invalid_secret_computation(self, client_key, receiver_key):
+        with pytest.raises(TypeError):
+            shared_secret_1 = key_exchange.compute_shared_secret(
+                client_key, receiver_key
+            )
+
+    # TODO End-to-End computation and derivation test - generate key pairs, comput secret, derive key, compare key
+    # TODO Test ephemeral keys are uniqie
+    # TODO Test private key secrecy - private_bytes_raw()
+    # TODO Test compute secret not all zeros
+    # TODO Test Salt as none value
+    # TODO Test bad secret cant derive key
+    # TODO Ensure keypairs have correct attributes - hasattr(keypair, private)
+    # TODO Global State Leakage
+    '''
+    def test_no_global_state_leakage(client_keypair, receiver_keypair):
+    s1 = key_exchange.compute_shared_secret(
+        client_keypair.private_key, receiver_keypair.public_key
+    )
+    s2 = key_exchange.compute_shared_secret(
+        client_keypair.private_key, receiver_keypair.public_key
+    )
+    assert s1 == s2
+'''

@@ -39,6 +39,10 @@ def compute_shared_secret(private_key: x25519.X25519PrivateKey, peer_public_key:
     Returns:
         shared_secret (bytes): Shared secret
     """
+    if not isinstance(private_key, x25519.X25519PrivateKey):
+        raise TypeError("Private Key should be x25519 Private Key Type")
+    if not isinstance(peer_public_key, x25519.X25519PublicKey):
+        raise TypeError("Public Key should be x25519 Public Key Type")
     shared_secret = private_key.exchange(peer_public_key)
     return shared_secret
 
